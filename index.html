@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welkom bij mijn Web Applicatie</title>
+    <title>Web Application</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,8 +17,26 @@
             color: #fff;
             padding: 10px 0;
         }
-        h1 {
-            margin-top: 0;
+        header h1 {
+            margin: 0;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav li {
+            margin: 0 15px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
         }
         .container {
             max-width: 800px;
@@ -27,6 +45,16 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .box {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .box h2 {
+            margin-top: 0;
         }
         form {
             margin-top: 20px;
@@ -57,27 +85,50 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        form input[type="submit"]:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Welkom bij mijn Web Applicatie</h1>
+        <h1>Welcome to My Web Application</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+		<li><a href="#welcome">Welcome</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="php">AdminPage</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
     </header>
     <div class="container">
-        <p>Deze webapplicatie stelt ons in staat om...</p>
-        
+	<div id="welcome" class="box">
+        <h2>Welcome!</h2>
+        <p>Hello! 👋😄 Welcome to my webapplication. Feel free to explore and reach out to me if you have any questions.</p>
+        </div>
+
+        <div id="about" class="box">
+        <h2>About this website</h2>
+       	<p>This website is designed to showcase my projects, skills, and experiences. I hope you find it informative and engaging!</p>
+	</div>
+
+	<div id="contact" class="box">
+        <h2>Contact</h2>
+        <p>I'm feeling a bit lonely 😔. Reach out to me down below and let's chat! 📱✨</p>
+
         <!-- Contact Form -->
         <form action="submit.php" method="post">
-            <label for="name">Naam:</label>
+            <label for="name">Name:</label>
             <input type="text" id="name" name="name" required><br>
-            
-            <label for="email">Email:</label>
+
+            <label for="email">E-mail:</label>
             <input type="email" id="email" name="email" required><br>
-            
-            <label for="message">Bericht:</label>
+
+            <label for="message">Message✉️:</label>
             <textarea id="message" name="message" required></textarea><br>
-            
-            <input type="submit" value="Verzenden">
+            <input type="submit" value="Send 👨‍🚀🚀">
         </form>
     </div>
 </body>
