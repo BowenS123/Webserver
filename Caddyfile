@@ -1,0 +1,11 @@
+server-of-bowen.pxl.bjth.xyz {
+    root * /var/www/html
+    php_fastcgi unix//run/php/php8.3-fpm.sock
+    file_server
+}
+
+server-of-bowen.pxl.bjth.xyz/php {
+    root * /var/www/html/php
+    file_server
+    php_fastcgi unix//run/php/php8.3-fpm.sock
+}
