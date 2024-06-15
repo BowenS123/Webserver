@@ -88,6 +88,20 @@
         form input[type="submit"]:hover {
             background-color: #555;
         }
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
@@ -96,41 +110,136 @@
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
-		<li><a href="#welcome">Welcome</a></li>
+                <li><a href="#welcome">Welcome</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="php">AdminPage</a></li>
-                <li><a href="#contact">Contact</a></li>
+		<li><a href="#contact">Contact</a></li>
+                <li><a href="php">Admin Page</a></li>
             </ul>
         </nav>
     </header>
     <div class="container">
-	<div id="welcome" class="box">
-        <h2>Welcome!</h2>
-        <p>Hello! 👋😄 Welcome to my webapplication. Feel free to explore and reach out to me if you have any questions.</p>
+        <div id="welcome" class="box">
+            <h2>Welcome!</h2>
+            <p>Hello! 👋😄 Welcome to my web application. Feel free to explore and reach out to me if you have any questions.</p>
         </div>
 
         <div id="about" class="box">
-        <h2>About this website</h2>
-       	<p>This website is designed to showcase my projects, skills, and experiences. I hope you find it informative and engaging!</p>
-	</div>
+            <h2>About this website</h2>
+            <p>This website is where you can send messages to me and see how many massage per day are send.</p>
+        </div>
 
-	<div id="contact" class="box">
-        <h2>Contact</h2>
-        <p>I'm feeling a bit lonely 😔. Reach out to me down below and let's chat! 📱✨</p>
+        <div id="contact" class="box">
+            <h2>Contact</h2>
+            <p>I'm feeling a bit lonely 😔. Reach out to me down below and let's chat! 📱✨</p>
 
-        <!-- Contact Form -->
-        <form action="submit.php" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br>
+            <!-- Contact Form -->
+            <form id="contactForm" action="submit.php" method="post">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br>
 
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" required><br>
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required><br>
 
-            <label for="message">Message✉️:</label>
-            <textarea id="message" name="message" required></textarea><br>
-            <input type="submit" value="Send 👨‍🚀🚀">
-        </form>
+                <label for="message">Message✉️:</label>
+                <textarea id="message" name="message" required></textarea><br>
+                <input type="submit" value= "Send 👨‍🚀🚀">
+            </form>
+
+            <div id="formMessage" class="message"></div>
+        </div>
+
+        <div id="messagesReceived" class="box">
+            <h2>Messages Received</h2>
+            <!-- Chart.js Canvas -->
+            <canvas id="messageChart" width="400" height="200"></canvas>
+        </div>
     </div>
+
+    <!-- JavaScript for Chart.js and dynamic updates -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var ctx = document.getElementById('messageChart').getContext('2d');
+    var messageChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Messages per Day',
+                data: [],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }	
+        }
+    });
+
+    function updateChart() {
+        fetch('massage_count.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const dates = data.map(entry => entry.message_date);
+                const counts = data.map(entry => entry.message_count);
+
+                messageChart.data.labels = dates;
+                messageChart.data.datasets[0].data = counts;
+                messageChart.update();
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    // Function to handle form submission
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        fetch('submit.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+	    var fromMessage = document.getElementById('formMessage');
+            if (data.error) {
+		formMessage.textContent = data.error;
+                formMessage.className = 'message error';
+                formMessage.style.display = 'block';
+            } else {
+                formMessage.textContent = data.success;
+                formMessage.className = 'message success';
+                formMessage.style.display = 'block';
+                updateChart();
+		this.reset();
+            }
+        })
+        .catch(error => {
+            var formMessage = document.getElementById('formMessage');
+            formMessage.textContent = 'Error submitting form. Please try again later';
+            formMessage.className = 'message error';
+            formMessage.style.display = 'block';
+            console.error('Error submitting form:', error);
+        });
+    });
+
+    updateChart();
+    setInterval(updateChart, 5000); // Update every 5 seconds
+});
+    </script>
 </body>
 </html>
-

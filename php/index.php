@@ -134,14 +134,18 @@ if ($loggedIn || isLoggedIn()) {
         echo "<h2>Contacten</h2>";
         echo "<ul>";
         while ($row = pg_fetch_assoc($result)) {
-            echo "<li><strong>Naam:</strong> " . $row['naam'] . " - <strong>Email:</strong> " . $row['email'] . " - <strong>Beschrijving:</strong> " . $row['beschrijving'] . "</li>";
-            echo "<form method='post'>";
-            echo "<input type='hidden' name='delete_id' value='" . $row['id'] . "'>";
-            echo "<input type='submit' value='Verwijderen'>";
-            echo "</form>";
-            echo "</li>";
-        }
-        echo "</ul>";
+    		echo "<li>";
+    		echo "<strong>Naam:</strong> " . $row['naam'] . "<br>";
+    		echo "<strong>Email:</strong> " . $row['email'] . "<br>";
+    		echo "<strong>Beschrijving:</strong> " . $row['beschrijving'] . "<br>";
+    		echo "<strong>Ontvangen op:</strong> " . $row['created_at'] . "<br>"; // Displaying the created_at timestamp
+    		echo "<form method='post'>";
+    		echo "<input type='hidden' name='delete_id' value='" . $row['id'] . "'>";
+    		echo "<input type='submit' value='Verwijderen'>";
+		echo "</form>";
+    		echo "</li>";
+	}
+	echo "</ul>";
     }
 } else {
     // Toon het inlogformulier
